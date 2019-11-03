@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
 require('../vendor/autoload.php');
+require_once('classes/dataValidate.php');
 
 // if (isset($_POST['send-btn'])) {
     
@@ -39,35 +40,64 @@ require('../vendor/autoload.php');
 // }
 // else{      
 // }
-// $addressError = false;
 
-if (isset($_POST['receiver-field'])) {
+
+if (isset($_POST['send-btn'])) {
+
+    //E-mail validate
+    $receiver = $_POST['receiver-field'];
+
+    $validator = new DataValidate();
+    $validator->emailValidate($receiver);
+
+    if($validator->getEmail() != null){
+        $e_error = false;
+    }
+    else{$e_error = true;}
+
+    //Subject validate
+    $subject = $_POST['subject-field'];
+
+    $validator->subjectValidate($subject);
+    $subject = $validator->getSubject();
+
+    if($subject != null){
+        $s_error = false;
+    }
+    else{$s_error = true;}
+
     
-    $odbiorca = $_POST['receiver-field'];
-    if ($odbiorca > 3) {
-        $addressError = true;
+    //Message content validate
+    $message1 = $_POST['messageField'];
+
+    $validator->messageValidate($message1);
+    $message1 = $validator->getMessage();
+
+    if($message1 != null){
+        $m_error = false;
+
+        $toast = true;
+
     }
     else{
-        $addressError = false;
-    }   
-}
-else{
-   
+        $m_error = true;
+        $toast = false;
+    }
+
+    $result = $validator->validateResult();
+ 
 }
 
 
 $loader = new Twig_Loader_Filesystem('../views');
 $twig = new Twig_Environment($loader);
 
-$title = 'Cycki Marioli';
-$title2 = 'Muffinki~~';
-
 echo $twig->render('index.html', array(
-    'alert' => 'Błąd walidacji danych',
-    'age' => 3,
-    'title' => $title,
-    'title2' => $title2,
-    'error1' => $addressError,
+    'e_error' => @$e_error,
+    's_error' => @$s_error,
+    'm_error' => @$m_error,
+    'result' => @$result,
+    'toastr' => @$toast,
     
 ));
 
