@@ -12,7 +12,7 @@ require_once('classes/dataValidate.php');
 
 if (isset($_POST['send-btn'])) {
 
-    $_SESSION['toastActive'] = true;
+    $toastActive = true;
     //E-mail validate
     $receiver = $_POST['receiver-field'];
 
@@ -85,15 +85,6 @@ if (isset($_POST['send-btn'])) {
             $mail->send();
         }
     }
-
-    // $arr = array(
-    //     'e_error' => @$e_error,
-    //     's_error' => @$s_error,
-    //     'm_error' => @$m_error,
-    //     'result' => @$result,
-    //     'toastr' => @$toast,
-        
-    // );
 }
 
 
@@ -106,7 +97,7 @@ echo $twig->render('index.html', array(
     's_error' => @$s_error,
     'm_error' => @$m_error,
     'result' => @$result,
-    'toastActive' => @$_SESSION['toastActive'],
+    'toastActive' => @$toastActive,
     'toastr' => @$toast,
     
 ));
