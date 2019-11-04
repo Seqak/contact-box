@@ -9,46 +9,16 @@ use PHPMailer\PHPMailer\SMTP;
 require('../vendor/autoload.php');
 require_once('classes/dataValidate.php');
 
-// if (isset($_POST['send-btn'])) {
-    
-//     $mail = new PHPMailer();
-
-//     $mail->isSMTP();
-//     $mail->Host = "smtp.gmail.com";
-//     $mail->SMTPAuth = true;
-//     $mail->Username = "jonbcrypt@gmail.com";
-//     $mail->Password = '#Hash123';
-//     $mail->SMTPSecure = "ssl";
-//     $mail->Port = 465;
-
-
-//     $mail->isHTML(true);
-//     $mail->setFrom("jonbcrypt@gmail.com", "Kacper");
-//     $mail->addAddress("kacperu770@gmail.com", "Test");
-//     $mail->Subject = "Siema";
-//     $mail->Body = "Body of email -lorem ipsum dolor sit amet";
-//     // ktesty@wp.pl
-
-//     if ($mail->send()) {
-//         // echo "Mail is sent";
-//     }
-//     else{
-//         // echo 'Mailer error: ' . $mail->ErrorInfo;
-//         // echo "Something is wrong";
-//     }
-
-// }
-// else{      
-// }
-
 
 if (isset($_POST['send-btn'])) {
 
+    $_SESSION['toastActive'] = true;
     //E-mail validate
     $receiver = $_POST['receiver-field'];
 
     $validator = new DataValidate();
     $validator->emailValidate($receiver);
+    $receiver = $validator->getEmail();
 
     if($validator->getEmail() != null){
         $e_error = false;
@@ -68,27 +38,66 @@ if (isset($_POST['send-btn'])) {
 
     
     //Message content validate
-    $message1 = $_POST['messageField'];
+    $messageContent = $_POST['message-field'];
 
-    $validator->messageValidate($message1);
-    $message1 = $validator->getMessage();
+    $validator->messageValidate($messageContent);
+    $messageContent = $validator->getMessage();
 
-    if($message1 != null){
-        $m_error = false;
-
-        $toast = true;
-
+    if($messageContent != null){
+        $m_error = false; 
     }
     else{
         $m_error = true;
+    }
+
+    //Set response for JS toast alert
+    // $toast = $validator->validateResult();
+
+    if ($e_error != true && $s_error  != true && $m_error != true) {      
+        $toast = true;
+    }
+    else{
         $toast = false;
     }
 
-    $result = $validator->validateResult();
- 
+    //PHPMailer - Send e-mail with data below
+    if ($toast == true) {
+        if (isset($_POST['send-btn'])) {
+    
+            $mail = new PHPMailer();
+        
+            $mail->isSMTP();
+            $mail->Host = "smtp.gmail.com";
+            $mail->SMTPAuth = true;
+            $mail->Username = "jonbcrypt@gmail.com";
+            $mail->Password = '#Hash123';
+            $mail->SMTPSecure = "ssl";
+            $mail->Port = 465;
+        
+        
+            $mail->isHTML(true);
+            $mail->setFrom("jonbcrypt@gmail.com", "01101011");
+            $mail->addAddress($receiver);
+            $mail->Subject = $subject;
+            $mail->Body = $messageContent;
+            // ktesty@wp.pl
+        
+            $mail->send();
+        }
+    }
+
+    // $arr = array(
+    //     'e_error' => @$e_error,
+    //     's_error' => @$s_error,
+    //     'm_error' => @$m_error,
+    //     'result' => @$result,
+    //     'toastr' => @$toast,
+        
+    // );
 }
 
 
+//Implement Twig template engine
 $loader = new Twig_Loader_Filesystem('../views');
 $twig = new Twig_Environment($loader);
 
@@ -97,9 +106,17 @@ echo $twig->render('index.html', array(
     's_error' => @$s_error,
     'm_error' => @$m_error,
     'result' => @$result,
+    'toastActive' => @$_SESSION['toastActive'],
     'toastr' => @$toast,
     
 ));
+
+/*
+*
+*
+*
+*
+*/
 
 
 ?>

@@ -123,20 +123,7 @@
                         <!-- ============================================================== -->
                         <!-- User profile and search -->
                         <!-- ============================================================== -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../assets/images/users/1.jpg" alt="user" class="rounded-circle" width="31"></a>
-                            <div class="dropdown-menu dropdown-menu-right user-dd animated">
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i> My Profile</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-wallet m-r-5 m-l-5"></i> My Balance</a>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i> Inbox</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-settings m-r-5 m-l-5"></i> Account Setting</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-power-off m-r-5 m-l-5"></i> Logout</a>
-                                <div class="dropdown-divider"></div>
-                                <div class="p-l-30 p-10"><a href="javascript:void(0)" class="btn btn-sm btn-success btn-rounded">View Profile</a></div>
-                            </div>
-                        </li>
+                      
                         <!-- ============================================================== -->
                         <!-- User profile and search -->
                         <!-- ============================================================== -->
@@ -262,7 +249,7 @@
                                                 <div class="form-group row">
                                                     <label for="lname" class="col-sm-3 text-right control-label col-form-label"><span class="text-danger">Wiadomość*</span></label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control is-invalid" id="lname" name="messageField">
+                                                        <input type="text" class="form-control is-invalid" id="lname" name="message-field">
                                                         <div class="invalid-feedback">
                                                             To pole nie może być puste
                                                         </div>
@@ -273,7 +260,7 @@
                                                 <div class="form-group row">
                                                     <label for="lname" class="col-sm-3 text-right control-label col-form-label">Wiadomość*</label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="lname" name="messageField">
+                                                        <input type="text" class="form-control" id="lname" name="message-field">
                                                     </div>
                                                 </div>
                                                 
@@ -283,7 +270,6 @@
                                     <div class="border-top">
                                         <div class="card-body">
                                             <button class="btn btn-primary" name="send-btn" type="submit">Submit</button>
-                                           
                                         </div>
                                     </div>
                                 </form>
@@ -349,7 +335,7 @@
         $(function(){
             // Success Type
             $('#ts-success').on('click', function() {
-                toastr.success('Wiadomość została wysłana!', 'Gratki', { timeOut: 1000 });
+                toastr.success('Wiadomość została wysłana!', 'Gratki');
             });
 
             // Success Type
@@ -372,16 +358,17 @@
     <!-- Twig and JS scripts -->
      
     <!-- Data validation Success or Error toastr alert. -->
-    {% if toastr == true %}
-        <script>
-            toastr.success('Twoja wiadomość została wysłana!', 'Gratulacje', { timeOut: 1500});
-        </script>
-    {% else %}
-        <script>
-            toastr.error('Wszystkie pola muszą zostać wypełnione prawidłowo.', 'UWAGA!', { timeOut: 1500});      
-        </script>
+    {% if toastActive == true %}
+        {% if toastr == true %}
+            <script>
+                toastr.success('Twoja wiadomość została wysłana!', 'Gratulacje', { timeOut: 1500});
+            </script>
+        {% else %}
+            <script>
+                toastr.error('Wszystkie pola muszą zostać wypełnione prawidłowo.', 'UWAGA!', { timeOut: 1500});      
+            </script>
+        {% endif %}
     {% endif %}
-
     
 </body>
 
