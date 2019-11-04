@@ -69,14 +69,14 @@ if (isset($_POST['send-btn'])) {
             $mail->isSMTP();
             $mail->Host = "smtp.gmail.com";
             $mail->SMTPAuth = true;
-            $mail->Username = "jonbcrypt@gmail.com";
-            $mail->Password = '#Hash123';
+            $mail->Username = "#"; //Enter your data
+            $mail->Password = '#'; //Enter your data
             $mail->SMTPSecure = "ssl";
             $mail->Port = 465;
         
         
             $mail->isHTML(true);
-            $mail->setFrom("jonbcrypt@gmail.com", "01101011");
+            $mail->setFrom("#", "#"); //Enter your data
             $mail->addAddress($receiver);
             $mail->Subject = $subject;
             $mail->Body = $messageContent;
